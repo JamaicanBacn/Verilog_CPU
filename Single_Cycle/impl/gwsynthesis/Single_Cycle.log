@@ -1,0 +1,40 @@
+GowinSynthesis start
+Running parser ...
+Analyzing Verilog file 'C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\cycle.v'
+Analyzing Verilog file 'C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v'
+Compiling module 'CPU'("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":1)
+Compiling module '_RegFile'("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":31)
+Extracting RAM for identifier 'regs'("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":43)
+WARN  (EX1998) : Net 'data_in[31]' does not have a driver("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":10)
+WARN  (EX1998) : Net 'write_addr[4]' does not have a driver("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":12)
+WARN  (EX1998) : Net 'read_addr[4]' does not have a driver("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":13)
+NOTE  (EX0101) : Current top module is "CPU"
+WARN  (EX0211) : The output port "led[5]" of module "CPU" has no driver, assigning undriven bits to Z, simulation mismatch possible("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":2)
+WARN  (EX0211) : The output port "led[4]" of module "CPU" has no driver, assigning undriven bits to Z, simulation mismatch possible("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":2)
+WARN  (EX0211) : The output port "led[3]" of module "CPU" has no driver, assigning undriven bits to Z, simulation mismatch possible("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":2)
+WARN  (EX0211) : The output port "led[2]" of module "CPU" has no driver, assigning undriven bits to Z, simulation mismatch possible("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":2)
+WARN  (EX0211) : The output port "led[1]" of module "CPU" has no driver, assigning undriven bits to Z, simulation mismatch possible("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":2)
+WARN  (EX0211) : The output port "led[0]" of module "CPU" has no driver, assigning undriven bits to Z, simulation mismatch possible("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":2)
+[5%] Running netlist conversion ...
+WARN  (CV0016) : Input clk is unused("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":4)
+WARN  (CV0016) : Input btn1 is unused("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":5)
+WARN  (CV0016) : Input btn2 is unused("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":6)
+Running device independent optimization ...
+[10%] Optimizing Phase 0 completed
+[15%] Optimizing Phase 1 completed
+[25%] Optimizing Phase 2 completed
+Running inference ...
+[30%] Inferring Phase 0 completed
+[40%] Inferring Phase 1 completed
+[50%] Inferring Phase 2 completed
+[55%] Inferring Phase 3 completed
+Running technical mapping ...
+[60%] Tech-Mapping Phase 0 completed
+[65%] Tech-Mapping Phase 1 completed
+[75%] Tech-Mapping Phase 2 completed
+[80%] Tech-Mapping Phase 3 completed
+[90%] Tech-Mapping Phase 4 completed
+WARN  (NL0002) : The module "_RegFile" instantiated to "regfile" is swept in optimizing("C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\src\RegFile.v":25)
+[95%] Generate netlist file "C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\impl\gwsynthesis\Single_Cycle.vg" completed
+[100%] Generate report file "C:\Gowin\Gowin_V1.9.12.03_x64\IDE\bin\Documents\Single_Cycle\impl\gwsynthesis\Single_Cycle_syn.rpt.html" completed
+GowinSynthesis finish

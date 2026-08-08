@@ -1,0 +1,68 @@
+//
+//Written by GowinSynthesis
+//Tool Version "V1.9.12.03 (64-bit)"
+//Fri Aug  7 18:13:17 2026
+
+//Source file index table:
+//file0 "\C:/Gowin/Gowin_V1.9.12.03_x64/IDE/bin/Documents/Single_Cycle/src/cycle.v"
+//file1 "\C:/Gowin/Gowin_V1.9.12.03_x64/IDE/bin/Documents/Single_Cycle/src/RegFile.v"
+`timescale 100 ps/100 ps
+module CPU (
+  led,
+  _3v3_,
+  clk,
+  btn1,
+  btn2
+)
+;
+output [5:0] led;
+output _3v3_;
+input clk;
+input btn1;
+input btn2;
+wire VCC;
+wire GND;
+  TBUF led_5_s0 (
+    .O(led[0]),
+    .I(GND),
+    .OEN(VCC) 
+);
+  TBUF led_5_s1 (
+    .O(led[1]),
+    .I(GND),
+    .OEN(VCC) 
+);
+  TBUF led_5_s2 (
+    .O(led[2]),
+    .I(GND),
+    .OEN(VCC) 
+);
+  TBUF led_5_s3 (
+    .O(led[3]),
+    .I(GND),
+    .OEN(VCC) 
+);
+  TBUF led_5_s4 (
+    .O(led[4]),
+    .I(GND),
+    .OEN(VCC) 
+);
+  TBUF led_5_s5 (
+    .O(led[5]),
+    .I(GND),
+    .OEN(VCC) 
+);
+  OBUF _3v3__obuf (
+    .O(_3v3_),
+    .I(VCC) 
+);
+  VCC VCC_cZ (
+    .V(VCC)
+);
+  GND GND_cZ (
+    .G(GND)
+);
+  GSR GSR (
+    .GSRI(VCC) 
+);
+endmodule /* CPU */

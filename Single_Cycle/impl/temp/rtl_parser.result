@@ -1,0 +1,20 @@
+[
+    {
+        "InstFile": "C:/Gowin/Gowin_V1.9.12.03_x64/IDE/bin/Documents/Single_Cycle/src/RegFile.v",
+        "InstLine": 1,
+        "InstName": "CPU",
+        "ModuleFile": "C:/Gowin/Gowin_V1.9.12.03_x64/IDE/bin/Documents/Single_Cycle/src/RegFile.v",
+        "ModuleLine": 1,
+        "ModuleName": "CPU",
+        "SubInsts": [
+            {
+                "InstFile": "C:/Gowin/Gowin_V1.9.12.03_x64/IDE/bin/Documents/Single_Cycle/src/RegFile.v",
+                "InstLine": 16,
+                "InstName": "regfile",
+                "ModuleFile": "C:/Gowin/Gowin_V1.9.12.03_x64/IDE/bin/Documents/Single_Cycle/src/RegFile.v",
+                "ModuleLine": 30,
+                "ModuleName": "_RegFile"
+            }
+        ]
+    }
+]
