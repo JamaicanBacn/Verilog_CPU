@@ -1,18 +1,109 @@
 
+`include "../Macros/OpCodes.vh"
+
+module ForwardingControl
+(
+
+    input wire[4:0] memwb_rd,
+    input wire[4:0] exmem_rd,
+    input wire[6:0] opcode,
+
+    input wire exmem_WriteToRegister,
+    input wire memwb_WriteToRegister,
+
+    input wire exmem_bubble,
+    input wire memwb_bubble,
+    input wire idex_bubble,
+
+
+    input wire[4:0] idex_rs1,
+    input wire[4:0] idex_rs2,
+
+    output wire[1:0] rs1_fwd,
+    output wire[1:0] rs2_fwd
+
+);
+
+wire rs1_exmem_fwd,
+wire rs1_memwb_fwd,
+wire rs2_exmem_fwd,
+wire rs2_memwb_fwd,
+
+wire Uses_rs1 = ( opcode != J_opcode) and ( opcode != LUI_opcode ) and ( opcode != AUIPC_opcode ) and ( !idex_bubble );
+wire Uses_rs2 = ( opcode == S_opcode or opcode == R_opcode or opcode == B_opcode or ) and !idex_bubble;
+
+
+assign rs1_exmem_fwd = Uses_rs1 and exmem_rd == idex_rs1 and idex_rs1 != 0 and exmem_WriteToRegister and !exmem_bubble;
+assign rs1_memwb_fwd = !rs1_exmem_fwd and Uses_rs1 and memwb_rd == idex_rs1 and idex_rs1 != 0 and memwb_WriteToRegister and !memwb_bubble;
+
+assign rs2_exmem_fwd = Uses_rs2 and exmem_rd == idex_rs2 and idex_rs2 != 0 and exmem_WriteToRegister and !exmem_bubble;
+assign rs2_memwb_fwd = !rs2_exmem_fwd and Uses_rs2 and memwb_rd == idex_rs2 and idex_rs2 != 0 and memwb_WriteToRegister and !memwb_bubble;
+
+assign rs1_fwd = rs1_exmem_fwd ? 2'b01 :
+                 rs1_memwb_fwd ? 2'b10 : 0;
+
+assign rs2_fwd = rs2_exmem_fwd ? 2'b01 :
+                 rs2_memwb_fwd ? 2'b10 : 0;
+
+
+endmodule
+
+module ForwardingMux
+(
+    
+    input wire[1:0] rs1_fwd,
+    input wire[1:0] rs2_fwd,
+
+    input wire[31:0] exmem_rs1,
+    input wire[31:0] exmem_rs2,
+    input wire[31:0] memwb_rs1,
+    input wire[31:0] memwb_rs2,
+
+
+    output wire[31:0] rs1_fwd_data,
+    output wire[31:0] rs2_fwd_data
+);
+
+assign rs1_fwd_data = (rs1_fwd == 1) ? exmem_rs1 :
+                      (rs1_fwd == 2) ? memwb_rs1 : 0;
+
+assign rs2_fwd_data = (rs2_fwd == 1) ? exmem_rs2 :
+                      (rs2_fwd == 2) ? memwb_rs2 : 0;
+
+endmodule
+
 
 
 module ForwardingUnit
 (
+
     input wire[4:0] memwb_rd,
     input wire[4:0] exmem_rd,
+    input wire[6:0] opcode,
+
+    input wire exmem_WriteToRegister,
+    input wire memwb_WriteToRegister,
+
+    input wire exmem_bubble,
+    input wire memwb_bubble,
+    input wire idex_bubble,
+
+    input wire[31:0] exmem_rs1,
+    input wire[31:0] exmem_rs2,
+    input wire[31:0] memwb_rs1,
+    input wire[31:0] memwb_rs2,
 
     input wire[4:0] idex_rs1,
-    input wire[4:0] idex_rs2
+    input wire[4:0] idex_rs2,
 
-    output wire exmem_fwd,
-    output wire memwb_fwd,
 
-    output wire[31:0] exmem_fwd_data,
-    output wire[31:0 ]
+    output wire rs1_fwd,
+    output wire rs2_fwd,
+    output wire[31:0] rs1_fwd_data,
+    output wire[31:0] rs2_fwd_data
 
 );
+
+
+
+endmodule

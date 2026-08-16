@@ -9,39 +9,29 @@ module ProgramCounter(
     input wire halt,
     input wire reset,
 
-    output wire[63:0] PC_output
+    output reg[63:0] PC_output
 
 );
 
 
 wire [63:0]Src0;
-reg  [63:0]CurrentProgramCounter;
-
-assign Src0 = CurrentProgramCounter + 4;
-
-
 
 // PC needs to be changed
 always @(posedge clk or posedge reset) begin
     
     if( reset ) begin
-       CurrentProgramCounter <= 0; 
+       PC_output <= 0; 
     end
     else if( PcWrite == 1 ) begin
 
-        CurrentProgramCounter <= Src1;
+        PC_output <= Src1;
     end
-    else if( halt == 1) begin
-        CurrentProgramCounter <= CurrentProgramCounter;
+    else if( halt == 0) begin
+        PC_output <= Src0;
     end
-    else begin
     
-        CurrentProgramCounter <= Src0;
-
-    end
-
 end
 
-assign PC_output = CurrentProgramCounter;
+assign Src0 = PC_output + 4;
 
 endmodule

@@ -11,6 +11,7 @@ module IFID_reg(
     output reg[4:0] rs2,
     output reg[4:0] rd,
     
+    output reg bubble,
     output reg[6:0] opcode
 );
 
@@ -18,11 +19,12 @@ module IFID_reg(
 always @( posedge clk) begin
 
     if( reset ) begin 
-        instruction_out <= 0;
+        instruction_out <= 7'b0010011;
         rs1 <= 0;
         rs2 <= 0;
         rd <= 0;
         op <= 0;
+        bubble <= 1;
     end
     else if ( ifid_write ) begin
         instruction_out <= instruction_in;
@@ -63,11 +65,13 @@ module IDEX_reg
     input wire MemRead_in,
     input wire MemWrite_in,
     input wire Branch_in,
+    input wire bubble_in,
 
     output reg RegisterWrite_out,
     output reg MemRead_out,
     output reg MemWrite_out,
-    output reg Branch_out
+    output reg Branch_out,
+    output reg bubble_out
 
 
 );
@@ -77,7 +81,7 @@ module IDEX_reg
 always @(posedge clk ) begin
 
     if( reset ) begin
-        opcode_out <= 0;
+        opcode_out <= 7'b0010011;
         rs1_data_out <= 0;
         rs2_data_out <= 0;
 
@@ -89,6 +93,7 @@ always @(posedge clk ) begin
         MemRead_out <= 0;
         MemWrite_out <= 0;
         Branch_out <= 0;
+        bubble_out <= 1;
     end
     else begin
         opcode_out <= opcode_in;
@@ -103,6 +108,7 @@ always @(posedge clk ) begin
         MemRead_out <= MemRead_in;
         MemWrite_out <= MemWrite_in;
         Branch_out <= Branch_in;
+        bubble_out <= bubble_in;
     end
 end
 
@@ -118,6 +124,7 @@ module EXMEM_reg(
     input wire MemWrite_in,
     input wire Branch_in,
     input wire RegisterWrite_in,
+    input wire bubble_in,
 
     input wire[4:0] rd_addr_in;
 
@@ -128,7 +135,8 @@ module EXMEM_reg(
     output reg[31:0] Alu_input2_out,
     output reg[4:0] rd_addr_out,
     
-    output reg RegisterWrite_out;
+    output reg RegisterWrite_out,
+    output reg bubble_out
 
 
 );
@@ -140,12 +148,14 @@ always @( posedge clk ) begin
         Alu_output_out <= 0;
         Alu_input2_out <= 0;
         RegisterWrite_out <= 0;
+        bubble_out <= 1;
     end
     else begin 
         rd_addr_out <= rd_addr_in;
         Alu_input2_out <= Alu_input2_in;
         Alu_output_out <= Alu_output_in;
         RegisterWrite_out <= RegisterWrite_in;
+        bubble_out <= bubble_in;
     end
 end
 
@@ -160,10 +170,14 @@ module MEMWB_reg(
     input wire[31:0] Alu_output_in,
     input wire[31:0] Memory_output_in,
 
-    output wire[31:0] Alu_output_out;
-    output wire[31:0] Memory_output_out;
+    input wire bubble_in,
 
-    output wire[4:0] rd_addr_out;
+    output wire[31:0] Alu_output_out,
+    output wire[31:0] Memory_output_out,
+
+    output wire[4:0] rd_addr_out,
+    output reg bubble_out,
+
 );
 
 always @(posedge clk) begin
@@ -171,11 +185,13 @@ always @(posedge clk) begin
         Alu_input2_out <= 0;
         Memory_output_out <= 0;
         rd_addr_out <= 0;
+        bubble_out <= 1;
     end
     else begin
         Alu_input2_out <= Alu_input2_in;
         Memory_output_out <= Memory_output_in;
         rd_addr_out <= rd_addr_in;
+        bubble_out <= bubble_in;
     end
 
 endmodule
