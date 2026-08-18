@@ -3,18 +3,18 @@
 module ProgramCounter(
 
     input wire clk,
-    input wire[63:0] Src1,
+    input wire[31:0] Src1,
 
     input wire PcWrite,
     input wire halt,
     input wire reset,
 
-    output reg[63:0] PC_output
+    output reg[31:0] PC_output
 
 );
 
 
-wire [63:0]Src0;
+wire [31:0]Src0;
 
 // PC needs to be changed
 always @(posedge clk or posedge reset) begin

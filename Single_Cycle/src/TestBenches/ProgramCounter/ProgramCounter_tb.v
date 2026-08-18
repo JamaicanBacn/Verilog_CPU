@@ -7,10 +7,10 @@ module ProgramCounter_tb;
 reg clk;
 reg halt;
 reg reset;
-reg [63:0]Src1;
+reg [31:0]Src1;
 reg PcWrite;
 
-wire[63:0] PC_output;
+wire[31:0] PC_output;
 
 integer cases_passed;
 integer cases_ran;

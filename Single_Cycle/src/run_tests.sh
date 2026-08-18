@@ -21,11 +21,19 @@ BasicALU()
    
 }
 
-MultiplicationUnit()
+Multiplication()
 {
     iverilog -o ./TestBenches/ALU/Multiplication_tb.vvp ./CPU/Multiplication_Unit.v ./TestBenches/ALU/Multiplication_tb.v
     vvp ./TestBenches/ALU/Multiplication_tb.vvp
     gtkwave ./TestBenches/ALU/Multiplication_Unit.vcd
+
+}
+
+ForwardUnit()
+{
+    iverilog -o ./TestBenches/FWD/FWD_tb.vvp ./CPU/Forwarding_Unit.v ./TestBenches/FWD/FWD_tb.v
+    vvp ./TestBenches/FWD/FWD_tb.vvp
+    gtkwave ./TestBenches/FWD/FWD.vcd
 
 }
 
@@ -36,7 +44,9 @@ case $1 in
         ProgramCounter;;
     basic_alu)
         BasicALU;;
-    multiply)
-        MultiplicationUnit;;
+    multiplication)
+        Multiplication;;
+    forward)
+        ForwardUnit;;
     *)
 esac

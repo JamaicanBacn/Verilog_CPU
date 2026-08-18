@@ -2,7 +2,7 @@
 `ifndef OpCodes
 `define OpCodes
 
-`define R_opcode     7'b0110111
+`define R_opcode     7'b0110011
 `define I_opcode     7'b0010011
 `define L_opcode     7'b0000011
 `define S_opcode     7'b0100011
@@ -11,5 +11,10 @@
 `define JALR_opcode  7'b1100111
 `define LUI_opcode   7'b0110111
 `define AUIPC_opcode 7'b0010111
+
+`define HIGH 1'b1
+`define LOW  1'b0
+
+
 
 `endif

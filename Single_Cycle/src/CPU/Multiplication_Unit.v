@@ -3,6 +3,19 @@
 // For int values
 // will not keep remainder
 
+module MulSignHandler(
+
+    input wire[31:0] rs1,
+    input wire rs1_signed,
+
+    output wire[32:0] signed_rs1
+);
+
+assign signed_rs1 = rs1_signed ? { rs1[31] , rs1} : { 1'b0 , rs1};
+
+
+endmodule
+
 
 
 
@@ -11,62 +24,69 @@ module MultiplicationUnit
 
     input wire clk,
     input wire start,
-    input wire _signed,
+    input wire Mulh,
+    input wire reset,
+
+    input wire rs1_signed,
+
     input wire[31:0] Multiplicand,
     input wire[31:0] Multiplier,
 
-    output wire[31:0] Product,
-    output wire busy
+    output wire[31:0] Product_out,
+    output reg busy
 );
 
-reg [31:0] internal_multiplier;
-reg [31:0] internal_product;
-reg [31:0] internal_multiplicand;
-reg internal_signed;
-reg rs1_sign;
-reg rs2_sign;
+reg signed [65:0] Product;
+reg[5:0]  counter;
+wire[1:0] BoothValue = Product[1:0];
+wire signed[32:0] extended_rs1;
 
-assign busy = internal_multiplier != 0;
-assign Product = internal_product;
+MulSignHandler MSH( .rs1(Multiplicand),
+                    .rs1_signed(rs1_signed),
+                    .signed_rs1(extended_rs1)
+                    );
 
-always @(posedge clk) begin
+always @(posedge clk ) begin
 
-
-    if( busy ) begin
-        if( internal_multiplier[0] ) begin
-        
-            internal_product <= internal_product + internal_multiplicand;
-        end
-        
-        internal_multiplicand <= internal_multiplicand << 1;
-        internal_multiplier <= internal_multiplier >> 1;
-        
+    if( reset ) begin
+        counter <= 0;
+        Product <= 0;
+        busy <= 0;
     end
-    else if( start ) begin
-    
-        internal_multiplier <= Multiplier;
-        internal_multiplicand <= Multiplicand;
-        internal_product <= 0;
-        internal_signed = _signed;
-        rs1_sign = Multiplicand[31];
-        rs2_sign = Multiplier[31];
-
-        if( _signed ) begin
-            
-            if( rs1_sign ) begin
-                internal_multiplicand <= ~Multiplicand + 1;
-            end
-
-            if(rs2_sign) begin
-                internal_multiplier <= ~Multiplier + 1;
-            end
+    else if ( counter == 32 ) begin
+        counter <= 0;
+        busy <= 0;
+    end
+    else if( busy ) begin
+        
+        if( BoothValue == 2'b10) begin
+            //subtract
+            Product[65:33] = Product[65:33] - extended_rs1;
+        end
+        else if( BoothValue == 2'b01 ) begin
+            Product[65:33] = Product[65:33] + extended_rs1;
         end
 
+        Product = Product >>> 1;
+        counter <= counter + 1;
+
     end
+    else if(start) begin
+            Product[65:33] <= 0;
+            Product[32:1] <= Multiplier;
+            Product[0] <= 0;
+            counter <= 0;
+            busy <= 1;
+        end
+
+
 end
 
 
+// for MULH 
+assign Product_out = Mulh  ? Product[64:33] : Product[32:1]; 
 
 
 
-endmodule;
+
+endmodule
