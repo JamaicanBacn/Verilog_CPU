@@ -40,7 +40,7 @@ initial begin
     $dumpvars(0 , Multiplication_tb );
 
     reset = 1;
-    rs1_signed = 1;
+    rs1_signed = 0;
     @(posedge clk); #1;
 
     $display("Unsigned case");
@@ -48,8 +48,8 @@ initial begin
     Mulh = 0;
     reset = 0;
     start = 1;
-    Multiplicand = 10;
-    Multiplier = 7;
+    Multiplicand = 32'hFFFFFFFF;
+    Multiplier = 32'hFFFFFFFF;
 
     @(negedge busy); #1;
 
@@ -57,13 +57,39 @@ initial begin
     reset =1;
 
     #1
-    $display("Signed Case");
+    $display(" rs1 Signed Case");
     start = 1;
     reset = 0;
+    rs1_signed = 1;
     Multiplicand = 32'hFFFFFFFF;
     Multiplier = 10;
 
     @(negedge busy); #1;
+
+    start = 0;
+    reset = 1;
+    
+    #1;
+    
+    $display(" Both Signed Case");
+    start = 1;
+    reset = 0;
+    Multiplier = 32'hFFFFFFFF;
+
+    @( negedge busy); #1;
+
+    start = 0;
+    reset = 1;
+
+    #1;
+
+    $display(" rs1 unsigned rs2 signed case");
+    reset = 0;
+    start = 1;
+    rs1_signed = 0;
+
+    @( negedge busy); #1;
+
 
 
 

@@ -17,8 +17,6 @@ assign signed_rs1 = rs1_signed ? { rs1[31] , rs1} : { 1'b0 , rs1};
 endmodule
 
 
-
-
 module MultiplicationUnit
 (   
 
@@ -67,8 +65,12 @@ always @(posedge clk ) begin
             Product[65:33] = Product[65:33] + extended_rs1;
         end
 
-        Product = Product >>> 1;
-        counter <= counter + 1;
+        if( signed_rs1 ) begin
+            Product = Product >>> 1;
+        end
+        else begin
+            counter <= counter + 1;
+        end
 
     end
     else if(start) begin
