@@ -65,12 +65,11 @@ always @(posedge clk ) begin
             Product[65:33] = Product[65:33] + extended_rs1;
         end
 
-        if( signed_rs1 ) begin
+        if( rs1_signed ) begin
             Product = Product >>> 1;
         end
-        else begin
-            counter <= counter + 1;
-        end
+
+        counter <= counter + 1;
 
     end
     else if(start) begin

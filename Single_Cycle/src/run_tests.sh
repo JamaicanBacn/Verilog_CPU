@@ -29,6 +29,15 @@ Multiplication()
 
 }
 
+DivisionUnit()
+{
+    
+    iverilog -o ./TestBenches/ALU/DivisionUnit_tb.vvp ./CPU/Division_Unit.v ./TestBenches/ALU/Division_tb.v
+    vvp ./TestBenches/ALU/DivisionUnit_tb.vvp
+    gtkwave ./TestBenches/ALU/DivisionUnit.vcd
+
+}
+
 ForwardUnit()
 {
     iverilog -o ./TestBenches/FWD/FWD_tb.vvp ./CPU/Forwarding_Unit.v ./TestBenches/FWD/FWD_tb.v
@@ -48,5 +57,7 @@ case $1 in
         Multiplication;;
     forward)
         ForwardUnit;;
+    division)
+        DivisionUnit;;
     *)
 esac
