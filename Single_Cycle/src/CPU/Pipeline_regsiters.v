@@ -1,4 +1,7 @@
 
+
+`include "./Macros/OpCodes.vh"
+
 module IFID_reg(
     
     input wire[31:0] instruction_in,
@@ -7,19 +10,21 @@ module IFID_reg(
     input wire clk,
 
     output reg[31:0] instruction_out,
-    output reg[4:0] rs1,
-    output reg[4:0] rs2,
-    output reg[4:0] rd,
     
     output reg bubble,
     output reg[6:0] opcode
 );
 
+reg[31:0] instruction_out;
+reg[4:0] rs1;
+reg[4:0] rs2;
+reg[4:0] rd;
+ 
 
 always @( posedge clk) begin
 
     if( reset ) begin 
-        instruction_out <= 7'b0010011;
+        instruction_out <= `I_opcode;
         rs1 <= 0;
         rs2 <= 0;
         rd <= 0;
@@ -43,21 +48,11 @@ module IDEX_reg
     input wire clk,
     input wire reset,
 
-    input wire[6:0] opcode_in,
     input wire[31:0] rs1_data_in,
     input wire[31:0] rs2_data_in,
+    input wire instruction_in,
 
-    input wire[4:0] rs1_addr_in,
-    input wire[4:0] rs2_addr_in,
-    input wire[4:0] rd_addr_in,
-
-    output reg[6:0] opcode_out,
-    output reg[31:0] rs1_data_out,
-    output reg[31:0] rs2-data_out,
-
-    output reg[4:0] rs1_addr_out,
-    output reg[4:0] rs2_addr_out,
-    output reg[4:0] rd_addr_out
+    output reg[31:0] instruction_out,
 
     // hazard detection
 
@@ -77,10 +72,18 @@ module IDEX_reg
 );
 
 
+reg[6:0] opcode_out;
+reg[31:0] rs1_data_out;
+reg[31:0] rs2-data_out;
+
+reg[4:0] rs1_addr_out;
+reg[4:0] rs2_addr_out;
+reg[4:0] rd_addr_out;
 
 always @(posedge clk ) begin
 
     if( reset ) begin
+        instruction_out <= 0;
         opcode_out <= 7'b0010011;
         rs1_data_out <= 0;
         rs2_data_out <= 0;
@@ -96,6 +99,7 @@ always @(posedge clk ) begin
         bubble_out <= 1;
     end
     else begin
+        instruction_out <= instruction_in;
         opcode_out <= opcode_in;
         rs1_data_out <= rs1_data_in;
         rs2_data_out <= rs2_data_in;
@@ -119,6 +123,9 @@ module EXMEM_reg(
     
     input wire clk,
     input wire reset,
+
+    input  wire[31:0] instruction_in,
+    output wire[31:0] instruction_out,
 
     input wire MemRead_in,
     input wire MemWrite_in,
