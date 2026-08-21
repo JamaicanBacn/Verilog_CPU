@@ -28,6 +28,13 @@ reg signed [6:0] counter;
 assign result = Div ? rs1[31] ^ rs2[31] ? ~quotient + 1 : quotient : remainder;
 
 
+initial begin
+   divisor = 0;
+   remainder = 0;
+   quotient = 0;
+   counter = 0; 
+end
+
 
 always @(posedge clk && rs1 != 0 && rs2 != 0) begin
 

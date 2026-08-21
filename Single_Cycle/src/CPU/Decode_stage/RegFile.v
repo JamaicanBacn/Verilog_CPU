@@ -14,7 +14,12 @@ module RegFile(
 
 
 reg [31:0] regs[31:0];
-integer i = 0;
+integer i;
+
+initial begin
+    i = 0;
+    regs = 0;
+end
 
 always @(posedge clk && enable or posedge reset) begin
     if( reset ) begin

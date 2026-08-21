@@ -19,6 +19,15 @@ reg[31:0] instruction_out;
 reg[4:0] rs1;
 reg[4:0] rs2;
 reg[4:0] rd;
+
+initial begin
+    instruction_out <= `I_opcode;
+    rs1 <= 0;
+    rs2 <= 0;
+    rd <= 0;
+    op <= 0;
+    bubble <= 1;
+end
  
 
 always @( posedge clk) begin
@@ -70,6 +79,23 @@ module IDEX_reg
 
 
 );
+
+inital begin
+    instruction_out <= 0;
+    opcode_out <= 7'b0010011;
+    rs1_data_out <= 0;
+    rs2_data_out <= 0;
+
+    rs1_addr_out <= 0;
+    rs2_addr_out <= 0;
+    rd_addr_out <= 0;
+
+    RegisterWrite_out <= 0;
+    MemRead_out <= 0;
+    MemWrite_out <= 0;
+    Branch_out <= 0;
+    bubble_out <= 1;
+end
 
 
 reg[6:0] opcode_out;
@@ -148,6 +174,14 @@ module EXMEM_reg(
 
 );
 
+initial begin
+    rd_addr_out <= 0;
+    Alu_output_out <= 0;
+    Alu_input2_out <= 0;
+    RegisterWrite_out <= 0;
+    bubble_out <= 1;
+end
+
 
 always @( posedge clk ) begin
     if(reset) begin
@@ -186,6 +220,13 @@ module MEMWB_reg(
     output reg bubble_out,
 
 );
+
+initial begin
+    Alu_input2_out <= 0;
+    Memory_output_out <= 0;
+    rd_addr_out <= 0;
+    bubble_out <= 1;
+end
 
 always @(posedge clk) begin
     if (reset) begin

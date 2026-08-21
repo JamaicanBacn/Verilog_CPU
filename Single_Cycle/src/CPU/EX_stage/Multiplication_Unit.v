@@ -44,6 +44,12 @@ MulSignHandler MSH( .rs1(Multiplicand),
                     .signed_rs1(extended_rs1)
                     );
 
+initial begin
+    counter <= 0;
+    Product <= 0;
+    busy <= 0;
+end
+
 always @(posedge clk ) begin
 
     if( reset ) begin

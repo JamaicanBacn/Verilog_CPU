@@ -13,6 +13,10 @@ module Basic_ALU(
 
 reg [31:0] tempout;
 
+initial begin
+    tempout = 0;
+end
+
 always @(*) begin
 
     case( OpCode )
