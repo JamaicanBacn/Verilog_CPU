@@ -5,13 +5,13 @@ module instruction_decoder
 (
     input wire[31:0] instruction_in,
     
-    output wire memread,
-    output wire memwrite,
-    output wire regwrite,
-    output wire branch,
-    output wire bubble,
-    output wire alusrc,
-    output wire aluop
+    output reg memread,
+    output reg memwrite,
+    output reg regwrite,
+    output reg branch,
+    output reg bubble,
+    output reg alusrc,
+    output reg aluop
 
 );
 
@@ -24,7 +24,16 @@ wire opcode = instruction_in[6:0];
 case( opcode ) begin
 
     `R_opcode : begin
-    
+        memread  <= `LOW;
+        memwrite <= `LOW;
+        regwrite <= `HIGH;
+        branch <= `LOW;
+        bubble <= `LOW;
+        alusrc <= 2'b0; // for using rs2
+    end
+
+    `I_opcode : begin
+        
     end
 
 endcase
