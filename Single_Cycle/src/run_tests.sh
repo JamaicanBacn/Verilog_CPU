@@ -46,6 +46,13 @@ ForwardUnit()
 
 }
 
+ImmGen()
+{
+    iverilog -o ./TestBenches/ImmGen/ImmGen.vvp ./CPU/Decode_stage/ImmGen.v ./TestBenches/ImmGen/ImmGen_tb.v
+    vvp ./TestBenches/ImmGen/ImmGen.vvp
+    gtkwave ./TestBenches/ImmGen/ImmGen.vcd   
+}
+
 case $1 in
     regfile)
         RegFile;;
@@ -59,5 +66,7 @@ case $1 in
         ForwardUnit;;
     division)
         DivisionUnit;;
+    immgen)
+        ImmGen;;
     *)
 esac

@@ -147,6 +147,7 @@ function [4:0] decode_Itype
     endcase
 endfunction
 
+function []
 
 // branch doesnt use the alu seperate logic
 
