@@ -5,11 +5,14 @@ module RegFile(
     input wire write_en,
     input wire reset,
 
-    input wire [4:0] read_addr,
+    input wire [4:0] rs1_addr,
+    input wire [4:0] rs2_addr,
+    
     input wire [4:0] write_addr,
 
     input wire [31:0] data_in,
-    output wire [31:0] data_out
+    output wire [31:0] rs1_out,
+    output wire [31:0] rs2_out,
 );
 
 
@@ -21,11 +24,9 @@ initial begin
     regs = 0;
 end
 
-always @(posedge clk && enable or posedge reset) begin
+always @(posedge clk && enable) begin
     if( reset ) begin
-        for( i = 0; i < 32 ; i++) begin
-            regs[i] <= 0;
-        end
+        regs[0] <= 32'b0;
     end
     else if ( write_en ) begin
     
@@ -35,8 +36,7 @@ always @(posedge clk && enable or posedge reset) begin
 end
 
 
-assign  data_out = regs[read_addr];
-
-
+assign  rs1_out = regs[rs1_addr];
+assign  rs2_out = regs[rs2_addr];
 
 endmodule

@@ -44,6 +44,8 @@ begin
             end
             3'h03 : begin
                 case( funct7 )
+                    //SLTU
+                    7'h00 :  decode_rtype = `SLTU_OP;
                     //MULHU
                     7'h01:  decode_rtype = `MULHU_OP;
 
@@ -95,7 +97,7 @@ begin
             end
             default : decode_rtype = `INVALID_OP; 
         endcase
-    end
+end
 endfunction
 
 function [4:0] decode_Itype;
@@ -119,6 +121,8 @@ begin
 
         //SLTI
         3'h02 : decode_Itype = `SLT_OP;
+        //SLTIU
+        3'h03 : decode_Itype = `SLTU_OP;
         //XORI
         3'h04: decode_Itype = `XOR_OP;
 
@@ -144,10 +148,6 @@ begin
     endcase
 end
 endfunction
-
-
-
-
 
 
 module Instruction_decoder
