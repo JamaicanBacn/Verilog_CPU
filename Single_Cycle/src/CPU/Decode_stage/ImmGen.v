@@ -5,7 +5,7 @@
 module ImmGen(
 
     input wire[31:0] instr,
-    output reg[31:0] imm
+    output reg[31:0] imm,
 );
 
 wire[6:0] opcode = instr[6:0];
@@ -15,7 +15,8 @@ always @(*) begin
     case( opcode )
 
         `I_opcode,
-        `L_opcode :  imm <= {{20{instr[31]}},
+        `L_opcode,
+        `JALR_opcode :  imm <= {{20{instr[31]}},
                               instr[31:20]};
         
         `S_opcode : imm <= { {20{instr[31]}},
@@ -31,8 +32,7 @@ always @(*) begin
         `LUI_opcode,
         `AUIPC_opcode : imm <= { instr[31:12], 12'b0};
 
-        `JAL_opcode,
-        `JALR_opcode : imm <= { {20{instr[31]}},
+        `JAL_opcode : imm <= { {20{instr[31]}},
                                 instr[31],
                                 instr[19:12],
                                 instr[20],

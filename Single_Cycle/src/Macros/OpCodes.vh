@@ -17,6 +17,7 @@
 `define LOW  1'b0
 
 `define INVALID_OP 0
+`define NoOP 0
 
 `define ADD_OP 1
 `define SUB_OP 2

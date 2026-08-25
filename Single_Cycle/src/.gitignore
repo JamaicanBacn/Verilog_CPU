@@ -2,3 +2,6 @@ gitignore
 
 *.vcd
 *.vcd.gz
+*.fst
+obj_dir/
+Waveforms/
