@@ -1,11 +1,9 @@
 #include "VDecodeTop.h"
 #include "verilated.h"
 #include "verilated_fst_c.h"
-#include "macros.h"
+#include "include_top.h"
 #include <iostream>
 #include <stdint.h>
-
-
 
 typedef enum : uint32_t {
 
@@ -88,7 +86,7 @@ ExpectedOutputs expected = {0};
 
 
 bool check_outputs(VDecodeTop* dut, const ExpectedOutputs& expected);
-void RegfileTest( VDecodeTop* dut, VerilatedFstC* trace, VerilatedContext* context)
+void RegfileTest( VDecodeTop* dut, VerilatedFstC* trace, VerilatedContext* context);
 
 void run_test(VDecodeTop* dut, VerilatedFstC* trace,
               VerilatedContext* context,
@@ -138,8 +136,8 @@ bool check_outputs(VDecodeTop* dut, const ExpectedOutputs& expected)
            dut->bubble_out == expected.bubble_out &&
            dut->alusrc == expected.alusrc &&
            dut->aluop == expected.aluop &&
-           dut->rs1_data_out = expected.rs1_data_out &&
-           dut->rs2_data_out = expected.rs2_data_out &&
+           dut->rs1_data_out == expected.rs1_data_out &&
+           dut->rs2_data_out == expected.rs2_data_out &&
            dut->Imm_out == expected.Imm_out;
 }
 
@@ -164,7 +162,7 @@ void run_test(VDecodeTop* dut, VerilatedFstC* trace,
                   << ", aluop=" << static_cast<int>(dut->aluop)
                   << ", rs1_data" << static_cast<int>(dut->rs1_data_out)
                   << ", rs2_data" << static_cast<int>(dut->rs2_data_out)
-                  << ", Imm" << ")" << static_cast<int>(dut->imm) << std::endl;
+                  << ", Imm" << ")" << static_cast<int>(dut->Imm_out) << std::endl;
 
         std::cout << "[Expected] " << test_name << " at t=" << context->time()
                   << " (rs1=" << static_cast<int>(expected.rs1_addr_out)
@@ -197,137 +195,137 @@ void runRegfile(VDecodeTop* dut, VerilatedFstC* trace,
 
 void expectedOutputs( uint32_t instr)
 {
-    expected.rs1 = (instr >> 15) & 0x1F;
-    expected.rs2 = (instr >> 20) & 0x1F;
-    expected.rd  = (instr >> 7) & 0x1F;
+    expected.rs1_addr_out = (instr >> 15) & 0x1F;
+    expected.rs2_addr_out = (instr >> 20) & 0x1F;
+    expected.rd_addr_out  = (instr >> 7) & 0x1F;
 
-    expected.rs1_data_out = Regfile[expected.rs1];
-    expected.rs2_data_out = Regfile[expected.rs2];
+    expected.rs1_data_out = Regfile[expected.rs1_addr_out];
+    expected.rs2_data_out = Regfile[expected.rs2_addr_out];
 
     Instruction instruction = parse_instruction(instr);
     
     uint32_t I_imm = sign_extend_number( (instr >> 20) , 12 );
-    uint32_t B_imm = get_branch_offset( instr );
-    uint32_t J_imm = get_jump_offset( instr );
-    uint32_t SL_imm = get_store_offset( instr );
+    uint32_t B_imm = get_branch_offset( instruction );
+    uint32_t J_imm = get_jump_offset( instruction );
+    uint32_t SL_imm = get_store_offset( instruction );
     uint32_t LUI_imm = sign_extend_number( (instr >> 10) , 20);
 
-    switch( instr & 0x7F ) {
+    switch( instruction.rtype.opcode ) {
 
         case R_opcode : 
 
-            expected.memread  = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = HIGH;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out  = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = HIGH;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b00; // for using rs2
-            expected.imm = 0; 
+            expected.Imm_out = 0; 
             break;
         
         case I_opcode :
-            expected.memread = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = HIGH;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = HIGH;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
-            expected.imm = I_imm;
+            expected.Imm_out = I_imm;
             break;
         
         case L_opcode :
-            expected.memread = HIGH;
-            expected.memwrite = LOW;
-            expected.regwrite = HIGH;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out = HIGH;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = HIGH;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
             expected.aluop = ADD_OP;
-            expected.imm = SL_imm;
+            expected.Imm_out = SL_imm;
             break;
 
         case S_opcode :
-            expected.memread = LOW;
-            expected.memwrite = HIGH;
-            expected.regwrite = LOW;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = HIGH;
+            expected.regwrite_out = LOW;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
             expected.aluop = ADD_OP;
-            expected.imm = SL_imm;
+            expected.Imm_out = SL_imm;
             break;
         
         case B_opcode : 
-            expected.memread = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = LOW;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = LOW;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b00;
             expected.aluop = NoOP;
-            expected.imm = B_imm;
+            expected.Imm_out = B_imm;
             break;
         
         case JAL_opcode : 
-            expected.memread = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = HIGH;
-            expected.branch = HIGH;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = HIGH;
+            expected.branch_out = HIGH;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
             expected.aluop = NoOP;
-            expected.imm = J_imm;
+            expected.Imm_out = J_imm;
             break;
         
         case JALR_opcode : 
-            expected.memread = LOW;
-            expected.memwrite = HIGH;
-            expected.regwrite = LOW;
-            expected.branch = HIGH;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = HIGH;
+            expected.regwrite_out = LOW;
+            expected.branch_out = HIGH;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
             expected.aluop = NoOP;
-            expected.imm = I_imm;
+            expected.Imm_out = I_imm;
             break;
         
         case LUI_opcode :
-            expected.memread = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = HIGH;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = HIGH;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
             expected.aluop = NoOP;
-            expected.imm = LUI_imm; 
+            expected.Imm_out = LUI_imm; 
             break;
         
         case AUIPC_opcode :
-            expected.memread = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = HIGH;
-            expected.branch = HIGH;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = HIGH;
+            expected.branch_out = HIGH;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
             expected.aluop = ADD_OP;
-            expected.imm = LUI_imm;
+            expected.Imm_out = LUI_imm;
             break;
         
         case ECALL_opcode :
-            expected.memread = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = LOW;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = LOW;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b01;
             expected.aluop = NoOP;
             break;
         
         default :
-            expected.memread = LOW;
-            expected.memwrite = LOW;
-            expected.regwrite = LOW;
-            expected.branch = LOW;
-            expected.bubble = LOW;
+            expected.memread_out = LOW;
+            expected.memwrite_out = LOW;
+            expected.regwrite_out = LOW;
+            expected.branch_out = LOW;
+            expected.bubble_out = LOW;
             expected.alusrc = 0b00;
             expected.aluop = NoOP;
             break;
@@ -340,16 +338,18 @@ void RegfileTest( VDecodeTop* dut, VerilatedFstC* trace, VerilatedContext* conte
     std::cout << "\nRegFile Write Test\n" << std::endl;
     
     dut->clk = LOW;
-    dut->write_en = LOW;
+    dut->write_en = HIGH;
 
-    for( int i = 0; i < 32 ; i++)
+    bool passed = true;
+
+    for( int i = 1; i < 32 ; i++)
     {
 
         dut->writeData = i;
         dut->writeAddr = i;
         dut->eval();
         trace->dump(context->time());
-        context->timeInc(CLK_HALF_PERIOD)
+        context->timeInc(CLK_HALF_PERIOD);
 
         dut->clk = HIGH;
         dut->eval();
@@ -360,7 +360,32 @@ void RegfileTest( VDecodeTop* dut, VerilatedFstC* trace, VerilatedContext* conte
 
         dut->clk = LOW;
         dut->eval();
-    } 
+    }
+    
+    dut->write_en = LOW;
+
+    for( int i = 1; i < 32 ; i++ )
+    {
+        dut->instruction_in = i << 15;
+        dut->eval();
+        trace->dump(context->time());
+        context->timeInc(NS);
+
+        std::cout << i << std::endl;
+
+        if( Regfile[i] != dut->rs1_data_out)
+        {
+            passed = false;
+        }
+
+
+    }
+
+
+    if( passed ) std::cout << "[PASS] " << "Regfile Test" << std::endl ;
+    else {  std::cout << "[FAILED] " << "Regfile Test" << std::endl;
+}
+ 
 
 
 }

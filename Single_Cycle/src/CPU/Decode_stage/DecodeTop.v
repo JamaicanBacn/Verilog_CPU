@@ -20,8 +20,8 @@ module DecodeTop(
     output reg [4:0] rs2_addr_out,
     output reg [4:0] rd_addr_out,
 
-    output reg [4:0] aluop_out,
-    output reg [1:0] alusrc_out,
+    output reg [4:0] aluop,
+    output reg [1:0] alusrc,
 
     output reg [31:0] Imm_out,
     output reg [31:0] rs1_data_out,
@@ -42,8 +42,8 @@ InstructionDecoder InstructionDecoder_inst(
     .regwrite(regwrite_out),
     .branch(branch_out),
     .bubble(bubble_out),
-    .alusrc(alusrc_out),
-    .aluop(aluop_out)
+    .alusrc(alusrc),
+    .aluop(aluop)
 );
 
 ImmGen ImmGen_inst(

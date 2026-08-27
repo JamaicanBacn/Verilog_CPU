@@ -5,6 +5,9 @@
 #define LOW 0
 #define HIGH 1
 
+#define NS 1
+
+
 #define CLK_PERIOD 10
 #define CLK_HALF_PERIOD (CLK_PERIOD/2)
 

@@ -13,7 +13,7 @@ RTL = $(COMPDIR)/$(TESTMOD)/rtl.f
 
 NAME = $(word 2,$(MAKECMDGOALS))
 
-verilator_tb:
+tb:
 	mkdir $(COMPDIR)/$(NAME)
 	touch $(COMPDIR)/$(NAME)/cpp.f
 	touch $(COMPDIR)/$(NAME)/rtl.f
