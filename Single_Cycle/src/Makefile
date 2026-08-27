@@ -1,8 +1,31 @@
 
 
-InstructionDecoder:
-	verilator --cc --exe --build --trace-fst  --Mdir ./TestBenches/InstructionDecoder/obj_dir --top-module Instruction_decoder ./CPU/Decode_stage/Instruction_decoder.v InstructionDecoder_tb.cpp
-ProgramCounter:
-	verilator --cc --exe --build --trace-fst  --Mdir ./TestBenches/ProgramCounter/obj_dir --top-module ProgramCounter ./CPU/Fetch_stage/ProgramCounter.v ProgramCounter_tb.cpp
+VFLAGS =  --cc --exe --build --trace-fst
+
+TESTMOD = $(firstword $(MAKECMDGOALS))
+INCLUDE = -I$(CURDIR)/Code/Include
+TBDIR = $(CURDIR)/TestBenches
+COMPDIR = $(CURDIR)/CompilationLists
+OBJDIR =  $(TBDIR)/$(TESTMOD)/obj_dir 
+TOPMOD = $(TESTMOD)
+CPP = $(COMPDIR)/$(TESTMOD)/cpp.f
+RTL = $(COMPDIR)/$(TESTMOD)/rtl.f
+
+NAME = $(word 2,$(MAKECMDGOALS))
+
+verilator_tb:
+	mkdir $(COMPDIR)/$(NAME)
+	touch $(COMPDIR)/$(NAME)/cpp.f
+	touch $(COMPDIR)/$(NAME)/rtl.f
+
+	mkdir $(TBDIR)/$(NAME)
+	touch $(TBDIR)/$(NAME)/$(NAME).cpp
+
+build:
+	verilator $(VFLAGS) --Mdir $(OBJDIR) --top-module $(TOPMOD) -f $(RTL) -f $(CPP) -CFLAGS $(INCLUDE)
 clean:
 	rm -rf ./TestBenches/*/*.vcd
+
+ProgramCounter: build
+InstructionDecoder: build
+DecodeTop : build

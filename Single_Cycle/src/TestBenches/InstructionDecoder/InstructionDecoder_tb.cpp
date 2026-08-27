@@ -1,9 +1,9 @@
 
 
-#include "VInstruction_decoder.h"
+#include "VInstructionDecoder.h"
 #include "verilated.h"
 #include "verilated_fst_c.h"
-#include "../../Macros/include_tb.hpp"
+#include "macros.h"
 #include <iostream>
 #include <stdint.h>
 
@@ -79,13 +79,13 @@ int passed_tests = 0;
 int failed_tests = 0;
 ExpectedOutputs expected = {0};
 
-void Rtest(VInstruction_decoder* dut, VerilatedFstC* trace, VerilatedContext* context);
-void Itest(VInstruction_decoder* dut, VerilatedFstC* trace, VerilatedContext* context);
-void LStest( VInstruction_decoder* dut, VerilatedFstC* trace, VerilatedContext* context);
-void LUI_AUIPC_test( VInstruction_decoder* dut, VerilatedFstC* trace, VerilatedContext* context);
+void Rtest(VInstructionDecoder* dut, VerilatedFstC* trace, VerilatedContext* context);
+void Itest(VInstructionDecoder* dut, VerilatedFstC* trace, VerilatedContext* context);
+void LStest( VInstructionDecoder* dut, VerilatedFstC* trace, VerilatedContext* context);
+void LUI_AUIPC_test( VInstructionDecoder* dut, VerilatedFstC* trace, VerilatedContext* context);
 
-bool check_outputs(VInstruction_decoder* dut, const ExpectedOutputs& expected);
-void run_test(VInstruction_decoder* dut, VerilatedFstC* trace);
+bool check_outputs(VInstructionDecoder* dut, const ExpectedOutputs& expected);
+void run_test(VInstructionDecoder* dut, VerilatedFstC* trace);
 void expectedOutputs(uint32_t instr);
 void Results();
 
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
 
     context->traceEverOn(true);
 
-    VInstruction_decoder* dut = new VInstruction_decoder{context};
+    VInstructionDecoder* dut = new VInstructionDecoder{context};
 
     VerilatedFstC* trace = new VerilatedFstC;
     dut->trace(trace, 99);
@@ -119,7 +119,7 @@ int main(int argc, char** argv)
     return 0;
 }
 
-bool check_outputs(VInstruction_decoder* dut, const ExpectedOutputs& expected)
+bool check_outputs(VInstructionDecoder* dut, const ExpectedOutputs& expected)
 {
     return dut->rs1 == expected.rs1 && dut->rs2 == expected.rs2 && dut->rd == expected.rd &&
            dut->memread == expected.memread && dut->memwrite == expected.memwrite &&
@@ -128,7 +128,7 @@ bool check_outputs(VInstruction_decoder* dut, const ExpectedOutputs& expected)
            dut->aluop == expected.aluop;
 }
 
-void run_test(VInstruction_decoder* dut, VerilatedFstC* trace,
+void run_test(VInstructionDecoder* dut, VerilatedFstC* trace,
               VerilatedContext* context, uint32_t instruction,
               const char* test_name, const ExpectedOutputs& expected)
 {
@@ -289,7 +289,7 @@ void expectedOutputs( uint32_t instr)
 
 }
 
-void Rtest( VInstruction_decoder* dut, VerilatedFstC* trace ,
+void Rtest( VInstructionDecoder* dut, VerilatedFstC* trace ,
            VerilatedContext* context)
 {
     std::cout << "\nR-type Instructions Test\n" << std::endl;
@@ -442,7 +442,7 @@ void Rtest( VInstruction_decoder* dut, VerilatedFstC* trace ,
 
 }
 
-void Itest( VInstruction_decoder* dut, VerilatedFstC* trace ,
+void Itest( VInstructionDecoder* dut, VerilatedFstC* trace ,
      VerilatedContext* context)
 {
     std::cout << "\nI-type Instructions Test\n" << std::endl;
@@ -521,7 +521,7 @@ void Itest( VInstruction_decoder* dut, VerilatedFstC* trace ,
 
 }
 
-void LStest( VInstruction_decoder* dut, VerilatedFstC* trace ,
+void LStest( VInstructionDecoder* dut, VerilatedFstC* trace ,
      VerilatedContext* context)
 {
     std::cout << "\nLoad/Store Instructions Test\n" << std::endl;
@@ -593,7 +593,7 @@ void LStest( VInstruction_decoder* dut, VerilatedFstC* trace ,
 }
 
 
-void LUI_AUIPC_test( VInstruction_decoder* dut, VerilatedFstC* trace ,
+void LUI_AUIPC_test( VInstructionDecoder* dut, VerilatedFstC* trace ,
      VerilatedContext* context)
 {
     std::cout << "\nLUI/AUIPC Instructions Test\n" << std::endl;

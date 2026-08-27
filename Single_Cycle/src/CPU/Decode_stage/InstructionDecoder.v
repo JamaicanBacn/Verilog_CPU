@@ -150,7 +150,7 @@ end
 endfunction
 
 
-module Instruction_decoder
+module InstructionDecoder
 (
     input wire[31:0] instruction_in,
 

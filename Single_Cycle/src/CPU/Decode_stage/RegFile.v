@@ -1,7 +1,6 @@
 
 module RegFile(
     input wire clk,
-    input wire enable,
     input wire write_en,
     input wire reset,
 
@@ -12,7 +11,7 @@ module RegFile(
 
     input wire [31:0] data_in,
     output wire [31:0] rs1_out,
-    output wire [31:0] rs2_out,
+    output wire [31:0] rs2_out
 );
 
 
@@ -20,19 +19,22 @@ reg [31:0] regs[31:0];
 integer i;
 
 initial begin
-    i = 0;
-    regs = 0;
+        
+    for (i = 0; i < 32; i = i + 1)
+        regs[i] = 32'b0;
+
 end
 
-always @(posedge clk && enable) begin
+always @(posedge clk) begin
     if( reset ) begin
-        regs[0] <= 32'b0;
+        regs[write_addr] <= 32'b0;
     end
     else if ( write_en ) begin
     
         regs[write_addr] <= data_in;
-
     end
+
+    regs[0] <= 0;
 end
 
 

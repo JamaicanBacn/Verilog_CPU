@@ -2,7 +2,7 @@
 #include <iostream>
 #include "verilated.h"
 #include "verilated_fst_c.h"
-#include "../../Macros/include_tb.hpp"
+#include "macros.h"
 #include <stdint.h>
 
 
