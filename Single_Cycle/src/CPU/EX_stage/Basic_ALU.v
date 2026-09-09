@@ -21,16 +21,28 @@ always @(*) begin
 
     case( OpCode )
 
-        0  : tempout <= $signed(data1) + $signed(data2);       // ADD
-        2  : tempout <= $signed(data1) - $signed(data2);       // SUB
-        3  : tempout <= data1 << data2[4:0];                   // SLL
-        5  : tempout <= $signed(data1) < $signed(data2);       // SLT
-        6  : tempout <= data1 ^ data2;                         // XOR
-        8  : tempout <= data1 >> data2[4:0];                   // SRL
-        9  : tempout <= $signed(data1) >>> data2[4:0];         // SRA
-        10 : tempout <= data1 | data2;                         // OR
-        12 : tempout <= data1 & data2;                         // AND
-        13 : tempout <= data2 << 12;                           // LUI
+        `ADD_OP     : tempout <= $signed(data1) + $signed(data2);       // ADD
+        `SUB_OP     : tempout <= $signed(data1) - $signed(data2);       // SUB
+        'SLL_OP     : tempout <= data1 << data2[4:0];                   // SLL
+        `SLT_OP     : tempout <= $signed(data1) < $signed(data2);       // SLT
+        `XOR_OP     : tempout <= data1 ^ data2;                         // XOR
+        `SRL_OP     : tempout <= data1 >> data2[4:0];                   // SRL
+        `SRA_OP     : tempout <= $signed(data1) >>> data2[4:0];         // SRA
+        `OR_OP      : tempout <= data1 | data2;                         // OR
+        `AND_OP     : tempout <= data1 & data2;                         // AND
+        `LUI_OP     : tempout <= data2 << 12;
+
+        `DIV_OP     : tempout <= $signed(data1) / $signed(data2);
+        `DIVU_OP    : tempout <= data1 / data2;
+
+        `MUL_OP     : tempout <= $signed(data1) * $signed(data2);
+        `MULH_OP    : tempout <= data1 / data2;
+        `MULHSU_OP  : tempout <= data1 / data2;
+        `MULHU_OP   : tempout <= data1 / data2;
+        
+
+        /* floating point shit here*/
+        
         default : tempout <= 0; 
     endcase
 
