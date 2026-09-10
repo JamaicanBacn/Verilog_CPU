@@ -7,11 +7,12 @@ module Basic_ALU(
     input wire[31:0] data1,
     input wire[31:0] data2, 
 
-    output wire[31:0] ALU_output
+    output reg[31:0] ALU_output
 
 );
 
-reg [31:0] tempout;
+reg [63:0] tempout;
+wire HighBits = ;
 
 initial begin
     tempout = 0;
@@ -21,33 +22,33 @@ always @(*) begin
 
     case( OpCode )
 
-        `ADD_OP     : tempout <= $signed(data1) + $signed(data2);       // ADD
-        `SUB_OP     : tempout <= $signed(data1) - $signed(data2);       // SUB
-        'SLL_OP     : tempout <= data1 << data2[4:0];                   // SLL
-        `SLT_OP     : tempout <= $signed(data1) < $signed(data2);       // SLT
-        `XOR_OP     : tempout <= data1 ^ data2;                         // XOR
-        `SRL_OP     : tempout <= data1 >> data2[4:0];                   // SRL
-        `SRA_OP     : tempout <= $signed(data1) >>> data2[4:0];         // SRA
-        `OR_OP      : tempout <= data1 | data2;                         // OR
-        `AND_OP     : tempout <= data1 & data2;                         // AND
-        `LUI_OP     : tempout <= data2 << 12;
+        `ADD_OP     : { tempout, HighBits}  <= { $signed(data1) + $signed(data2) , 1'b0 } ;  
+        `SUB_OP     : { tempout, HighBits}  <= { $signed(data1) - $signed(data2) , 1'b0 } ;  
+        'SLL_OP     : { tempout, HighBits}  <= { data1 << data2[4:0] , 1'b0};               
+        `SLT_OP     : { tempout, HighBits}  <= { $signed(data1) < $signed(data2) , 1'b0};   
+        `XOR_OP     : { tempout, HighBits}  <= { data1 ^ data2 , 1'b0};                      
+        `SRL_OP     : { tempout, HighBits}  <= { data1 >> data2[4:0] , 1'b0};                
+        `SRA_OP     : { tempout, HighBits}  <= { $signed(data1) >>> data2[4:0] , 1'b0};      
+        `OR_OP      : { tempout, HighBits}  <= { data1 | data2 , 1'b0};                      
+        `AND_OP     : { tempout, HighBits}  <= { data1 & data2 , 1'b0};                      
+        `LUI_OP     : { tempout, HighBits}  <= { data2 << 12  , 1'b0};
 
-        `DIV_OP     : tempout <= $signed(data1) / $signed(data2);
-        `DIVU_OP    : tempout <= data1 / data2;
+        `DIV_OP     : { tempout, HighBits}  <= { $signed(data1) / $signed(data2) , 1'b0};
+        `DIVU_OP    : { tempout, HighBits}  <= { data1 / data2};
 
-        `MUL_OP     : tempout <= $signed(data1) * $signed(data2);
-        `MULH_OP    : tempout <= data1 / data2;
-        `MULHSU_OP  : tempout <= data1 / data2;
-        `MULHU_OP   : tempout <= data1 / data2;
+        `MUL_OP     : { tempout, HighBits}  <= { $signed(data1) * $signed(data2) , 1'b0};
+
+        `MULH_OP    : { tempout, HighBits} <=  { $signed(data1) * $signed(data2) 1'b1 };
+        `MULHSU_OP  : { tempout, HighBits} <=  { $signed(data1) * data2 1'b1 };
+        `MULHU_OP   : { tempout, HighBits} <=  { data1 * data2 , 1'b1 };
         
-
-        /* floating point shit here*/
         
-        default : tempout <= 0; 
+        default : {tempout , HighBits} <= 0; 
     endcase
-
 end
 
-assign ALU_output = $unsigned(tempout);
+
+
+assign ALU_output = HighBits ? tempout[63:32] : tempout[31:0];
 
 endmodule
