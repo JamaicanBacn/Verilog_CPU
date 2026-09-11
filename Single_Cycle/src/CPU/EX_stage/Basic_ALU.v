@@ -34,13 +34,16 @@ always @(*) begin
         `LUI_OP     : { tempout, HighBits}  <= { data2 << 12  , 1'b0};
 
         `DIV_OP     : { tempout, HighBits}  <= { $signed(data1) / $signed(data2) , 1'b0};
-        `DIVU_OP    : { tempout, HighBits}  <= { data1 / data2};
+        `DIVU_OP    : { tempout, HighBits}  <= { data1 / data2 , 1'b0};
 
         `MUL_OP     : { tempout, HighBits}  <= { $signed(data1) * $signed(data2) , 1'b0};
 
         `MULH_OP    : { tempout, HighBits} <=  { $signed(data1) * $signed(data2) 1'b1 };
         `MULHSU_OP  : { tempout, HighBits} <=  { $signed(data1) * data2 1'b1 };
         `MULHU_OP   : { tempout, HighBits} <=  { data1 * data2 , 1'b1 };
+
+        `REM_OP     :
+        `REMU_OP    :
         
         
         default : {tempout , HighBits} <= 0; 
